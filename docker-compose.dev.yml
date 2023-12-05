@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  bank_app_web:
+    &default_django_backend
+    restart: always
+    image: bank_app:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: bank_app_web
+#    command: tail -F anything
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - .:/opt/bank_app/
+    ports:
+      - "80:80"
+    env_file:
+      - variables/dev.env
+    depends_on:
+      - bank_app_db
+      - bank_app_rabbitmq
+
+  bank_app_db:
+    image: postgres:13.2-alpine
+    container_name: bank_app_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5436:5432
+    env_file:
+      - variables/dev.env
+
+  bank_app_rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: bank_app_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: mypass
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  bank_app_celery:
+    <<: *default_django_backend
+    container_name: bank_app_celery
+#    command: tail -F anything
+    command: celery -A celery_app worker -l DEBUG
+    ports: []
+    labels: []
+
+
+volumes:
+  postgres_data:
