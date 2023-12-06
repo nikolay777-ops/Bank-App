@@ -98,7 +98,7 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../', 'static')
 STATIC_URL = '/staticfiles/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'apps/user/static'),
+    os.path.join(BASE_DIR, 'apps/account_system/static'),
 )
 
 LOCK_DIR = '/var/lock'
