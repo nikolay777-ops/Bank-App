@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from currency_rates.models.currency import Currency
 
-
 class CurrencyRate(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rate = models.DecimalField(max_digits=8, decimal_places=5)
