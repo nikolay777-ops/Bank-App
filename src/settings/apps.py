@@ -10,9 +10,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'currency_rates',
-    'inv_strategies',
-    'ssr',
+    'payments',
     'remittance',
+    'stocks',
+    'ssr',
     'user',
-    'crispy_forms',
 ]

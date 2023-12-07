@@ -10,6 +10,13 @@ class BalanceEntity:
 
 
 @dataclass
+class ContactEntity:
+    from_user_pk: int
+    to_user_pk: int
+    is_close: bool
+
+
+@dataclass
 class UserEntity:
     pk: int
     name: str

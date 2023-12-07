@@ -26,17 +26,3 @@ class User(AbstractBaseUser):
         app_label = 'user'
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-
-
-class Contacts(models.Model):
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_contact_user')
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_contact_user')
-    is_close = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.from_user.name} contact: {self.to_user.name}'
-
-    class Meta:
-        app_label = 'user'
-        verbose_name = _('Contact')
-        verbose_name_plural = _('Contacts')

@@ -1,22 +1,16 @@
 import abc
 
-from user.domain.entities import UserEntity
+from user.domain.entities import ContactEntity
+
+
+class IContactDAO(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def fetch_by_user_pk(self, user_pk: int) -> list[ContactEntity]:
+        pass
 
 
 class IContactsProcessor(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    def fetch_contacts_by_pk(self, user_pk: int) -> list[UserEntity]:
-        pass
 
     @abc.abstractmethod
-    def add_close_contact(self, from_pk: int, to_pk: int):
+    def update_contact_entity(self, entity: ContactEntity):
         pass
-
-    @abc.abstractmethod
-    def delete_close_contact(self, from_pk: int, to_pk: int):
-        pass
-
-    @abc.abstractmethod
-    def is_close(self, from_pk: int, to_pk: int) -> bool:
-        pass
-

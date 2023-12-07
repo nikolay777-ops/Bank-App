@@ -1,11 +1,14 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from currency_rates.models.currency import Currency
+
+__all__ = (
+    'CurrencyRate',
+)
 
 
 class CurrencyRate(models.Model):
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    rate = models.DecimalField(max_digits=8, decimal_places=5)
+    currency = models.ForeignKey('Currency', on_delete=models.CASCADE)
+    rate = models.FloatField()
     date_of_use = models.DateTimeField()
 
     def __str__(self):
@@ -15,4 +18,3 @@ class CurrencyRate(models.Model):
         app_label = 'currency_rates'
         verbose_name = _('Currency rate')
         verbose_name_plural = _('Currency rates')
-        

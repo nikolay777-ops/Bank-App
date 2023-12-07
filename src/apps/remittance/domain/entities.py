@@ -5,8 +5,8 @@ from decimal import Decimal
 
 @dataclass
 class RemittanceEntity:
+    pk: int
+    currency_pk: str
     sender_pk: int
-    reciever_pk: int
+    receiver_pk: int
     count: Decimal
-    dt: datetime.datetime
-

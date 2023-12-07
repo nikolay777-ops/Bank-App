@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 
+from .models import Contact
 from .models.user import User
 
 __all__ = (
@@ -11,9 +12,10 @@ __all__ = (
 class UserAdminForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('name', 'phone_number', 'password', 'qr_code', 'otp_code')
         widgets = {
-            'otp_code': forms.PasswordInput()
+            'otp_code': forms.PasswordInput(),
+            'password': forms.PasswordInput(),
         }
 
 
@@ -24,3 +26,19 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('-created_at',)
 
+
+class ContactAdminForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['from_user'].queryset = User.objects.all()
+        self.fields['to_user'].queryset = User.objects.all()
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    form = ContactAdminForm
+    fields = ('from_user', 'to_user', 'is_close')

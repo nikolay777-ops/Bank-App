@@ -1,0 +1,10 @@
+APPLE_STOCK_CODE = 'AAPL'
+
+ALL_STOCK_CODES = (
+    APPLE_STOCK_CODE
+)
+
+ALL_STOCK_CHOICES = (
+    (code, code)
+    for code in ALL_STOCK_CODES
+)

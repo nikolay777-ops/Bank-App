@@ -1,0 +1,10 @@
+MTS_PAYMENT_CODE = 'MTS'
+
+ALL_PAYMENT_CODES = (
+    MTS_PAYMENT_CODE,
+)
+
+ALL_PAYMENT_CODES_CHOICES = (
+    (code, code)
+    for code in ALL_PAYMENT_CODES
+)
