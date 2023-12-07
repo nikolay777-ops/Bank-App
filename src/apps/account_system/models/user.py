@@ -12,8 +12,8 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=15)
     phone_number = models.CharField(max_length=13)
     qr_code = models.ImageField(upload_to='qrcode/', null=True, blank=True)
-    otp_code = EncryptedCharField(_('OTP code'), max_length=100, null=True, blank=True)
-    otp_code_updated_at = models.DateTimeField(_('Date and time of otp code update'), auto_now=True)
+    secret_code = EncryptedCharField(_('secret code'), max_length=100, null=True, blank=True)
+    secret_code_updated_at = models.DateTimeField(_('Date and time of secret code update'), auto_now=True)
     role_id = models.ForeignKey('Role', on_delete=models.CASCADE, related_name='users')
     account_id = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='users')
 
