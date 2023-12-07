@@ -10,7 +10,7 @@ class Account(models.Model):
     amount = models.DecimalField(_('Amount of $'), decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return self.amount
+        return f'{self.amount}'
 
     class Meta:
         app_label = 'account_system'
