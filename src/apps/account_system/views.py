@@ -97,6 +97,8 @@ def home(request):
     if user_id:
         user = User.objects.get(id=user_id)
         return render(request, 'core/home.html', {'user': user})
+    else:
+        return render(request, 'core/home.html')
 
 # def login(request):
 #     if request.method == "GET":
