@@ -18,14 +18,17 @@ def register(request):
             user.account_id = account  # Установка объекта Account в поле account_id
             user.role_id = role
             secret_key = generate_secret_key()
+            user.secret_code = secret_key
             qr_code = generate_qr_code(user.name, secret_key)
             qr_code_image = qr_code
-            user.secret_key = secret_key
             buffer = BytesIO()
             qr_code.save(buffer, format='PNG')
             qr_code_filename = f'{user.name}_qr_code.png'
             user.qr_code.save(qr_code_filename, ContentFile(buffer.getvalue()), save=True)
             user.save()  # Сохранение объекта User
+
+            # Создание сессии для зарегистрированного пользователя
+            login(request, user)
 
             qr_bytes = BytesIO()
             qr_code_image.save(qr_bytes, format='PNG')
@@ -37,13 +40,8 @@ def register(request):
             context = {
                 'qr_base64': qr_base64,
             }
-            return render(request, 'two_factor_auth_qrcode.html', context)
-
-            # Создание сессии для зарегистрированного пользователя
-            login(request, user)
-            #user.qr_code = qr_code.url #special error
-            return render(request, 'two_factor_auth_qrcode.html', {'qr_code': qr_code_img})
+            return render(request, 'account_system/two_factor_auth_qrcode.html', context)
     else:
         form = RegistrationForm()
-    return render(request, 'registration.html', {'form': form})
+    return render(request, 'account_system/registration.html', {'form': form})
 

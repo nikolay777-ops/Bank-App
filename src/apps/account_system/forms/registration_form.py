@@ -11,8 +11,10 @@ __all__ = (
 class RegistrationForm(UserCreationForm):
     phone_number = forms.CharField(
         max_length=13,
-        validators=[RegexValidator(r'^\+\d{1,3}\d{9}$',
-                                   'Phone number must be in the format: +X followed by 9 digits')]
+        phone_validator=RegexValidator(
+            r'^\+375\d{9}$',
+            'Phone number must be in the format: +375 followed by 9 digits and start with 375'
+        )
     )
 
     class Meta(UserCreationForm.Meta):

@@ -38,7 +38,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['apps/ssr/'],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,3 +106,5 @@ LOCK_DIR = '/var/lock'
 IS_SWAGGER_ENABLE = env.bool('IS_SWAGGER_ENABLE', default=True)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

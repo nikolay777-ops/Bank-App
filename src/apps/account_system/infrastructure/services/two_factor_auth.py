@@ -1,8 +1,11 @@
 import qrcode
 import pyotp
+from random import SystemRandom
+import base64
 
 def generate_secret_key():
-    return pyotp.random_base32()
+    random_bytes = SystemRandom().getrandbits(256).to_bytes(32, byteorder='big')
+    return base64.b32encode(random_bytes).decode('utf-8')
 
 
 # otp - это тот код(шестизначный), который вы вводите из приложения гугл аунтификатора
