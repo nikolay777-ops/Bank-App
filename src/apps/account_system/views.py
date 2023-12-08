@@ -51,3 +51,6 @@ def register(request):
         form = RegistrationForm()
     return render(request, 'account_system/registration.html', {'form': form})
 
+def home(request):
+    # You can add any additional logic or data retrieval here if needed
+    return render(request, 'core/home.html')
