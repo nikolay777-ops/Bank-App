@@ -43,17 +43,26 @@ class RemittanceProcessor(IRemittanceProcessor):
         )
 
         if remittance_entity:
-            currency_account_entity = self.currency_account_dao.fetch_by_user_pk_currency_pk(
+            sender_currency_account_entity = self.currency_account_dao.fetch_by_user_pk_currency_pk(
                 user_pk=remittance_entity.sender_pk,
                 currency_pk=remittance_entity.currency_pk
             )
 
+            receiver_currency_account_entity = self.currency_account_dao.fetch_by_user_pk_currency_pk(
+                user_pk=remittance_entity.receiver_pk,
+                currency_pk=remittance_entity.currency_pk
+            )
 
-            currency_account_entity.balance -= remittance_entity.count
+            sender_currency_account_entity.balance -= remittance_entity.count
 
-            if currency_account_entity.balance >= 0:
+            if sender_currency_account_entity.balance >= 0 and receiver_currency_account_entity:
+                receiver_currency_account_entity.balance += remittance_entity.count
+
                 self.currency_account_processor.update_currency_account(
-                    entity=currency_account_entity
+                    entity=sender_currency_account_entity
+                )
+                self.currency_account_processor.update_currency_account(
+                    entity=receiver_currency_account_entity
                 )
                 self.update_remittance(entity=remittance_entity, success=True)
 

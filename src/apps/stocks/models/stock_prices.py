@@ -7,9 +7,12 @@ __all__ = (
 
 
 class StockPrices(models.Model):
-    stock = models.OneToOneField('Stock', on_delete=models.CASCADE)
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
     rate = models.FloatField()
     date_of_use = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.stock.pk} {self.rate}$'
 
     class Meta:
         app_label = 'stocks'

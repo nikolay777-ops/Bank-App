@@ -17,8 +17,16 @@ class InvestmentPortfolioAdminForm(forms.ModelForm):
 
 @admin.register(InvestmentPortfolio)
 class InvestmentPortfolioAdmin(admin.ModelAdmin):
+    def owner_name(self, obj):
+        return obj.owner.name
+
     form = InvestmentPortfolioAdminForm
     fields = ('owner', 'name')
+    list_display = (
+        'pk',
+        'owner_name',
+        'name'
+    )
 
 
 class InvestmentStrategyAdminForm(forms.ModelForm):
@@ -55,7 +63,21 @@ class StockPricesAdminForm(forms.ModelForm):
 @admin.register(StockPrices)
 class StockAdmin(admin.ModelAdmin):
     form = StockPricesAdminForm
-    fields = ('stock', 'rate', 'date_of_use')
+    ordering = ('-date_of_use', )
+    list_filter = ('stock', 'rate', 'date_of_use')
+    list_display = ('stock', 'rate', 'date_of_use')
+
+    fieldsets = (
+        (
+            'Main', {
+                'fields': (
+                    'stock',
+                    'rate',
+                    'date_of_use'
+                )
+            }
+        ),
+    )
 
 
 class StockTransactionAdminForm(forms.ModelForm):
@@ -71,6 +93,42 @@ class StockTransactionAdminForm(forms.ModelForm):
 
 @admin.register(StockTransaction)
 class StockTransactionAdmin(admin.ModelAdmin):
+    def stock_name(self, obj):
+        return obj.stock_price.stock.name
+
+    def stock_price_value(self, obj):
+        return obj.stock_price.rate
+
+    def stock_price_datetime(self, obj):
+        return obj.stock_price.date_of_use
+
+    def owner(self, obj):
+        return obj.inv_portfolio.owner.name
+
+    def inv_port_name(self, obj):
+        return obj.inv_portfolio.name
+
+    stock_name.short_description = 'Stock Name'
+    stock_price_value.short_description = 'Stock Price'
+    owner.short_description = 'Owner Name'
+    inv_port_name.short_description = 'Portfolio Name'
+
+    list_display = (
+        'owner',
+        'inv_port_name',
+        'stock_name',
+        'stock_price_datetime',
+        'stock_price_value',
+        'count',
+        'buy'
+    )
+
+    list_filter = (
+        'inv_portfolio__owner',
+        'inv_portfolio__name',
+        'stock_price__stock__name',
+    )
+
     form = StockTransactionAdminForm
     fields = ('inv_portfolio', 'stock_price', 'count', 'buy')
 

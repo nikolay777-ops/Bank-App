@@ -16,7 +16,7 @@ class StockTransaction(models.Model):
         related_name='transaction_inv_port',
         null=True,
     )
-    stock_price = models.OneToOneField('StockPrices', on_delete=models.CASCADE)
+    stock_price = models.ForeignKey('StockPrices', on_delete=models.CASCADE)
     count = models.IntegerField()
 
     class Meta:

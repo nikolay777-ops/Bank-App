@@ -24,6 +24,8 @@ json-logging = "==1.3.0"
 pillow = "*"
 django-crispy-forms = "*"
 crispy-bootstrap4 = "*"
+qrcode = "*"
+pyotp = "*"
 
 [dev-packages]
 pylint = "==2.17.7"

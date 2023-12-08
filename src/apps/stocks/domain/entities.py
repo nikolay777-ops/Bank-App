@@ -7,7 +7,7 @@ from decimal import Decimal
 class StockEntity:
     name: str
     rate: Decimal
-    data_of_use: datetime.datetime
+    date_of_use: datetime.datetime
     count: int
     profit: Decimal
 
