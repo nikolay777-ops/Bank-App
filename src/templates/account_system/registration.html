@@ -16,18 +16,30 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Your_name">
+                    {% if errors.name %}
+                        <div class="text-danger">{{ errors.name }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="phone_number">Phone Number</label>
                     <input type="text" name="phone_number" class="form-control" placeholder="+375291335588">
+                    {% if errors.phone_number %}
+                        <div class="text-danger">{{ errors.phone_number }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password1">Password</label>
                     <input type="password" name="password1" class="form-control" placeholder="Password">
+                    {% if errors.password1 %}
+                        <div class="text-danger">{{ errors.password1 }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password2">Password again</label>
                     <input type="password" name="password2" class="form-control" placeholder="Password">
+                    {% if errors.password2 %}
+                        <div class="text-danger">{{ errors.password2 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">

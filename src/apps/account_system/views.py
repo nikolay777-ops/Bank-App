@@ -3,6 +3,8 @@ from io import BytesIO
 
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
+from pyexpat.errors import messages
+
 from .forms import RegistrationForm
 from .models import Account, Role
 from django.contrib.auth import login
@@ -41,6 +43,10 @@ def register(request):
                 'qr_base64': qr_base64,
             }
             return render(request, 'account_system/two_factor_auth_qrcode.html', context)
+        else:
+            # Вывод ошибок в случае неудачной валидации
+            errors = form.errors
+            return render(request, 'account_system/registration.html', {'form': form, 'errors': errors})
     else:
         form = RegistrationForm()
     return render(request, 'account_system/registration.html', {'form': form})
