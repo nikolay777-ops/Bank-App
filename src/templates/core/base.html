@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
 
-    <title>Ecommerce</title>
+    <title>MyBank</title>
     <style>
 
 
@@ -28,21 +28,24 @@
             color: white;
             background: #FF0000 !important;
                 }
-        body{
+        body {
             background-color: #000000;
-
-        }
-        .hover_img{
-        transition: transform .5s ease;
-        }
-        .hover_img:hover{
-            transform: scale(1.05);
-        }
-        #popup_modal{
-        max-width: 1000px;
-        margin-top: 0px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
+        .content {
+            flex: 1;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -91,20 +94,19 @@
 </nav>
 
 
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
 
-{% block content %}
-
-{% endblock %}
-
-<div class="container-fluid bg-dark mt-3">
-    <center><strong><p class="text-white mb-0  ml-4 py-3" style="font-size: 18px;"><i class="fas fa-copyright"></i> 2022 E-Commerce Software by vKiiNGz. All rights reserved.</p></strong></center>
+<div class="footer">
+    <p class="text-white mb-0" style="font-size: 18px;">&copy; 2023 Bank Software by vKiiNGz. All rights reserved.</p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script>
-
 </script>
 </body>
 </html>
