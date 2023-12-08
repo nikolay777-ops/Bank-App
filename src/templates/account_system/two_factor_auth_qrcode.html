@@ -1,1 +1,47 @@
-<img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Code">
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.qr-code-container {
+  margin-bottom: 20px;
+}
+
+.verification {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.verification label {
+  margin-bottom: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if qr_code %}
+<div class="container">
+    <div class="qr-code-container">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+  </div>
+  <form class="verification" method="post" action="{% url 'two_factor_auth_qrcode' %}">
+    {% csrf_token %}
+    <label for="verification_code">Verification Code:</label>
+    <input type="text" id="verification_code" name="verification_code" required>
+    <button type="submit">Verify</button>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+  </form>
+</div>
+{% endif %}
+{% endblock %}

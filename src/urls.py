@@ -15,12 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
-from account_system.views import register, home
+from django.urls import path
+from account_system.views import register, home, two_factor_auth_qr_code
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register, name='register'),
-    path('two_factor_auth_qrcode/', register, name='two_factor_auth_qrcode'),
+    path('two_factor_auth_qrcode/', two_factor_auth_qr_code, name='two_factor_auth_qrcode'),
     path('', home, name='home'),
 ]
