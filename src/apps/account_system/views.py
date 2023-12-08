@@ -4,10 +4,12 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 
-from .forms import RegistrationForm
-from .models import Account, Role
+from .forms import RegistrationForm, LoginForm
+from .models import Account, Role, User
 from .infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
 from django.core.cache import cache
+
+from django.contrib.auth import login, authenticate
 
 
 def register(request):
@@ -91,4 +93,56 @@ def two_factor_auth_qr_code(request):
 
 def home(request):
     # You can add any additional logic or data retrieval here if needed
-    return render(request, 'core/home.html')
+    user_id = request.session.get('user_id')
+    if user_id:
+        user = User.objects.get(id=user_id)
+        return render(request, 'core/home.html', {'user': user})
+
+# def login(request):
+#     if request.method == "GET":
+#         return render(request, 'account_system/login.html')
+#     else:
+#         email = request.POST.get('mail')
+#         password = request.POST.get('password1')
+#         customer = User.get_customer_by_email(email)
+#         error_msg = None
+#         if customer:
+#             flag = check_password(password, customer.password)
+#             if flag:
+#                 request.session['customer_id'] = customer.id
+#                 request.session['email'] = customer.email
+#                 logger.debug("login customer mail: " + str(customer.email))
+#                 request.session['cart'] = {}
+#                 return redirect("home")
+#             else:
+#                 error_msg = "Email or Password is incorrect."
+#         else:
+#             error_msg = "Email or Password is incorrect."
+#         return render(request, 'account_system/login.html', {'error_msg': error_msg})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            password1 = form.cleaned_data['password1']
+
+            # Проверяем пользователя по номеру телефона
+            try:
+                user = User.objects.get(phone_number=phone_number)
+                if user.check_password(password1):
+                    login(request, user)
+                    request.session['user_id'] = user.id
+                    return redirect('home')
+                else:
+                    errors = {'password1': ['Incorrect password']}
+                    return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
+            except User.DoesNotExist:
+                errors = {'phone_number': ['User with this phone number does not exist']}
+                return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
+        else:
+            errors = form.errors
+            return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
+    else:
+        form = LoginForm()
+    return render(request, 'account_system/login.html', {'form': form})

@@ -10,7 +10,7 @@ __all__ = (
 
 class User(AbstractBaseUser):
     name = models.CharField(max_length=15)
-    phone_number = models.CharField(max_length=13)
+    phone_number = models.CharField(max_length=13, unique=True)
     secret_code = EncryptedCharField(_('secret code'), max_length=100, null=True, blank=True)
     secret_code_updated_at = models.DateTimeField(_('Date and time of secret code update'), auto_now=True)
     role_id = models.ForeignKey('Role', on_delete=models.CASCADE, related_name='users')
