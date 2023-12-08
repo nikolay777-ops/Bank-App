@@ -8,40 +8,53 @@
             <h3 class="text-white text-center pb-2">Create an Account</h3>
             <form action="" method="post" class="bg-dark">
                 {% csrf_token %}
-                {% if error_msg %}
-                    <div class="alert alert-warning">
-                        {{error_msg}}
+                {% if errors %}
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Your_name" value="{{ form.name.value }}">
+                        {% if errors.name %}
+                            <div class="text-danger">{{ errors.name }}</div>
+                        {% endif %}
                     </div>
-                {% endif %}
+                    <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" name="phone_number" class="form-control" placeholder="+375291335588" value="{{ form.phone_number.value }}">
+                     {% if errors.phone_number %}
+                        <div class="text-danger">{{ errors.phone_number }}</div>
+                     {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <input type="password" name="password1" class="form-control" placeholder="Password" value="{{ form.password1.value }}">
+                        {% if errors.password %}
+                            <div class="text-danger">{{ errors.password1 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Password again</label>
+                        <input type="password" name="password2" class="form-control" placeholder="Password" value="{{ form.password2.value }}">
+                        {% if errors.password2 %}
+                            <div class="text-danger">{{ errors.password2 }}</div>
+                        {% endif %}
+                    </div>
+                {% else %}
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Your_name">
-                    {% if errors.name %}
-                        <div class="text-danger">{{ errors.name }}</div>
-                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="phone_number">Phone Number</label>
                     <input type="text" name="phone_number" class="form-control" placeholder="+375291335588">
-                    {% if errors.phone_number %}
-                        <div class="text-danger">{{ errors.phone_number }}</div>
-                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password1">Password</label>
                     <input type="password" name="password1" class="form-control" placeholder="Password">
-                    {% if errors.password1 %}
-                        <div class="text-danger">{{ errors.password1 }}</div>
-                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password2">Password again</label>
                     <input type="password" name="password2" class="form-control" placeholder="Password">
-                    {% if errors.password2 %}
-                        <div class="text-danger">{{ errors.password2 }}</div>
-                    {% endif %}
                 </div>
-
+                {% endif %}
                 <div class="form-group">
                     <input type="submit" value="Register" class="btn btn-primary mt-1 mr-2 mb-3">
                     <a href="{% url 'register' %}">Login</a> Instead!
