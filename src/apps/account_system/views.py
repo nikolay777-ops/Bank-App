@@ -127,6 +127,9 @@ def account_view(request, currency):
     secret_key = cache.get(f"2fa_secret_key_{user_name}")
     phone_num = cache.get('phone_num')
     if user_name and secret_key:
+        user = User.objects.get(name=user_name)
+        request.session['user_id'] = user.id
+        cache.set(f'user_name', user.name, 3600)
         account = Account.objects.get(owner__name=user_name, owner__phone_number=phone_num, currency__name=currency)
         return render(request, 'account_system/account.html', {'accounts': [account]})
 
@@ -138,6 +141,9 @@ def accounts_view(request):
     secret_key = cache.get(f"2fa_secret_key_{user_name}")
     phone_num = cache.get('phone_num')
     if user_name and secret_key:
+        user = User.objects.get(name=user_name)
+        request.session['user_id'] = user.id
+        cache.set(f'user_name', user.name, 3600)
         accounts = Account.objects.filter(owner__name=user_name, owner__phone_number=phone_num)
         return render(request, 'account_system/account.html', {'accounts': accounts})
 
@@ -155,9 +161,10 @@ def two_factor_auth(request):
                 verification_code = request.POST['verification_code']
                 if verify_otp(secret=secret_key, otp=verification_code):
                     request.session['user_id'] = user.id
+                    cache.set(f'user_name', user.name, 3600)
                     return redirect('home')
                 else:
-                    errors = {'verification_code': ['Invalid verification code']}
+                    errors = {'verification_code': 'Invalid verification code'}
                     return render(
                         request,
                         'account_system/two_factor_auth.html',
