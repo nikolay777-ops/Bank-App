@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
 
+from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 
 from .forms import RegistrationForm, LoginForm
@@ -25,6 +26,7 @@ def register(request):
             # cache user-secret code
             cache.set(f'user_name', user.name, 3600)
             cache.set(f"2fa_secret_key_{user.name}", secret_key, 3600)
+            cache.set(f'phone_num', user.phone_number, 3600)
 
             return redirect('two_factor_auth_qrcode')
 
@@ -70,10 +72,11 @@ def two_factor_auth_qr_code(request):
                 return render(
                     request,
                     'account_system/two_factor_auth_qrcode.html',
-                    {'errors': errors,'qr_code': qr_code}
+                    {'errors': errors, 'qr_code': qr_code}
                 )
 
     return redirect('register')
+
 
 def home(request):
     # You can add any additional logic or data retrieval here if needed
@@ -86,6 +89,7 @@ def home(request):
         return render(request, 'core/home.html', {'user': user})
     else:
         return render(request, 'core/home.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -105,6 +109,7 @@ def login_view(request):
                     # cache user-secret code
                     cache.set(f'user_name', user.name, 3600)
                     cache.set(f"2fa_secret_key_{user.name}", secret_key, 3600)
+                    cache.set(f'phone_num', user.phone_number, 3600)
 
                     return redirect('two_factor_auth')
                 else:
@@ -119,6 +124,29 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'account_system/login.html', {'form': form})
+
+
+def account_view(request, currency):
+    user_name = cache.get(f'user_name')
+    secret_key = cache.get(f"2fa_secret_key_{user_name}")
+    phone_num = cache.get('phone_num')
+    if user_name and secret_key:
+        account = Account.objects.get(owner__name=user_name, owner__phone_number=phone_num, currency__name=currency)
+        return render(request, 'account_system/account.html', {'accounts': [account]})
+
+    return redirect('login')
+
+
+def accounts_view(request):
+    user_name = cache.get(f'user_name')
+    secret_key = cache.get(f"2fa_secret_key_{user_name}")
+    phone_num = cache.get('phone_num')
+    if user_name and secret_key:
+        accounts = Account.objects.filter(owner__name=user_name, owner__phone_number=phone_num)
+        return render(request, 'account_system/account.html', {'accounts': accounts})
+
+    return redirect('login')
+
 
 def two_factor_auth(request):
     user_id = request.session.get('user_id')

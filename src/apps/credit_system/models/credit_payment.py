@@ -7,7 +7,7 @@ __all__ = (
 
 
 class CreditPayment(models.Model):
-    request_id = models.ForeignKey('CreditRequest', on_delete=models.CASCADE, related_name='creditPayments')
+    credit = models.ForeignKey('Credit', on_delete=models.CASCADE, related_name='credit_payment_credit', null=True)
     amount = models.DecimalField(_('The amount for payment'), decimal_places=2, max_digits=10)
     payment_timestamp = models.DateTimeField(_('Payment date'))
 

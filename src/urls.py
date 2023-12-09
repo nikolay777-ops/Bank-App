@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth
+from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, accounts_view
+from account_system.views import register, home, two_factor_auth_qr_code, login_view, account_view
+from credit_system.views import credit_configuration_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +27,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('login/', login_view, name="login"),
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
+    path('account/<str:currency>', account_view, name='account_list'),
+    path('accounts/', accounts_view, name='account_list'),
+    path('credits/', credit_configuration_list, name='credits_list'),
 ]
