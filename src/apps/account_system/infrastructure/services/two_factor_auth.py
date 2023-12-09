@@ -1,7 +1,5 @@
 import qrcode
 import pyotp
-from random import SystemRandom
-import base64
 
 
 def generate_secret_key():

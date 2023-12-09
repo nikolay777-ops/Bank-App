@@ -1,12 +1,12 @@
 import base64
 from io import BytesIO
 
-from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 
 from .forms import RegistrationForm, LoginForm
 from .models import Account, Role, User
 from .infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
+from account_system.infrastructure.services.user_check_in_session import user_check_in_session
 from django.core.cache import cache
 
 from django.contrib.auth import login
@@ -78,13 +78,10 @@ def two_factor_auth_qr_code(request):
 
 
 def home(request):
-    # You can add any additional logic or data retrieval here if needed
-    user_id = request.session.get('user_id')
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        user = False
-    if user_id and user:
+    user = user_check_in_session(request, cache)
+    if user:
+        cache.set(f'user_name', user.name, 3600)
+        request.session['user_id'] = user.id
         return render(request, 'core/home.html', {'user': user})
     else:
         return render(request, 'core/home.html')
@@ -148,20 +145,16 @@ def accounts_view(request):
 
 
 def two_factor_auth(request):
-    user_id = request.session.get('user_id')
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        user = False
-    if user_id and user:
-        request.session['user_id'] = user_id
+    user = user_check_in_session(request, cache)
+    if user:
+        request.session['user_id'] = user.id
         if request.method == 'POST':
             user_name = cache.get(f'user_name')
             secret_key = cache.get(f"2fa_secret_key_{user_name}")
             if user_name and secret_key:
                 verification_code = request.POST['verification_code']
                 if verify_otp(secret=secret_key, otp=verification_code):
-                    request.session['user_id'] = user_id
+                    request.session['user_id'] = user.id
                     return redirect('home')
                 else:
                     errors = {'verification_code': ['Invalid verification code']}
