@@ -38,7 +38,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['apps/ssr/'],
+        'DIRS': ['templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,14 +95,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, '../', 'media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, '../', 'static')
-STATIC_URL = '/staticfiles/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'apps/user/static'),
-)
+STATIC_URL = '/static/'
 
 LOCK_DIR = '/var/lock'
 
 IS_SWAGGER_ENABLE = env.bool('IS_SWAGGER_ENABLE', default=True)
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'

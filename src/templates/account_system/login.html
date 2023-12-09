@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container text-white pt-5">
+    <div class="p-5 m-5">
+        <div class="col-md-6 mx-auto pt-4 bg-dark">
+            <h3 class="text-white text-center pb-2">Login to your account</h3>
+            <form action="{% url 'login' %}" method="post" class="bg-dark">
+                {% csrf_token %}
+                {% if errors %}
+                    <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" name="phone_number" class="form-control" placeholder="+375291335588" value="{{ form.phone_number.value }}">
+                     {% if errors.phone_number %}
+                        <div class="text-danger">{{ errors.phone_number }}</div>
+                     {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <input type="password" name="password1" class="form-control" placeholder="Password" value="{{ form.password1.value }}">
+                        {% if errors.password1 %}
+                            <div class="text-danger">{{ errors.password1 }}</div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" name="phone_number" class="form-control" placeholder="+375291335588">
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" name="password1" class="form-control" placeholder="Password">
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary mt-1 mr-2 mb-3">
+                    <a href="{% url 'register' %}">Signup</a> Instead!
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

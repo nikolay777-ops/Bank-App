@@ -12,9 +12,9 @@ __all__ = (
 class UserAdminForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('name', 'phone_number', 'password', 'qr_code', 'otp_code')
+        fields = ('name', 'phone_number', 'password', 'secret_code')
         widgets = {
-            'otp_code': forms.PasswordInput(),
+            'secret_code': forms.PasswordInput(),
             'password': forms.PasswordInput(),
         }
 

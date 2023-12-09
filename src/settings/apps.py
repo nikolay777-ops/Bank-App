@@ -13,6 +13,6 @@ INSTALLED_APPS = [
     'payments',
     'remittance',
     'stocks',
-    'ssr',
     'user',
+    'credit',
 ]

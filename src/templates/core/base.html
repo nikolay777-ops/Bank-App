@@ -1,0 +1,125 @@
+{% load  static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+
+    <title>MyBank</title>
+    <style>
+
+
+        a{
+        font-size: 15px;
+        }
+
+        a:hover{
+            transition: transform .6s ease;
+            transform: scale(1.1);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            border: none;
+            color: white;
+            background: #FF0000 !important;
+                }
+        body {
+            background-color: #111111;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item">
+                {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Credits
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'credits_list' %}">List of credits</a>
+{#                    <a class="dropdown-item" href="{% url 'transaction_history' %}">Take a credit</a>#}
+{#                    <a class="dropdown-item" href="{% url 'create_transaction' %}">My credits</a>#}
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Transactions
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+{#                    <a class="dropdown-item" href="{% url 'transaction_history' %}">Transaction history</a>#}
+{#                    <a class="dropdown-item" href="{% url 'create_transaction' %}">Create a Transaction</a>#}
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'login' %}">Statistic</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'login' %}">Logout</a>
+            </li>
+
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'register' %}">Signup</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+            </li>
+
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
+
+
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<div class="footer">
+    <p class="text-white mb-0" style="font-size: 18px;">&copy; 2023 Bank Software by vKiiNGz. All rights reserved.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+</script>
+</body>
+</html>

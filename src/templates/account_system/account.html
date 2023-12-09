@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% for account in accounts %}
+<div class="card mx-auto mt-8" style="width: 18rem;">
+  <div class="card-header bg-primary text-white text-center">
+    <h2 class="font-semibold">{{ account.currency }} Details</h2>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <span class="font-weight-bold">Amount:</span>
+      <span class="text-success font-weight-bold">{{ account.amount }} USD</span>
+    </li>
+    <li class="list-group-item">
+      <span class="font-weight-bold">Owner:</span>
+      <span class="text-danger font-weight-bold">{{ account.owner.name }}</span>
+    </li>
+  </ul>
+</div>
+{% endfor %}
+{% endblock %}
