@@ -134,7 +134,8 @@ def two_factor_auth(request):
             if user_name and secret_key:
                 verification_code = request.POST['verification_code']
                 if verify_otp(secret=secret_key, otp=verification_code):
-                    return render(request, 'core/home.html', {'user': user})
+                    request.session['user_id'] = user_id
+                    return redirect('home')
                 else:
                     errors = {'verification_code': ['Invalid verification code']}
                     return render(
