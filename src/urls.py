@@ -31,7 +31,7 @@ urlpatterns = [
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
 
     path('create_transaction/', login_view, name="create_transaction"),
-    path('ttransaction_history/', transaction_history, name="transaction_history"),
+    path('transaction_history/', transaction_history, name="transaction_history"),
 
     path('credits/', credit_configuration_list, name='credits_list'),
     path('my_credits/', two_factor_auth, name="my_credits"),

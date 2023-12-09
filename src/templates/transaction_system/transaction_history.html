@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'core/base.html' %}
 
-</body>
-</html>
+{% block content %}
+<table сlass="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Type</th>
+      <th>Recipient</th>
+      <th>Correspondent</th>
+      <th>Amount of $</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaction in transactions %}
+    <tr class="table-active">
+      <th scope="row">Active</th>
+      <td>{{ transaction.recipient_name }}</td>
+      <td>{{ transaction.corespondent_name }}</td>
+      {% if transaction.recipient == user_id %}
+        <td style="color: green;">{{ transaction.amount }}</td>
+      {% else %}
+        <td style="color: red;">{{ transaction.amount }}</td>
+      {% endif %}
+        <td>{{ transaction.timestamp }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
