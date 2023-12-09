@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from user.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, accounts_view, account_view
-from credit.views import credit_configuration_list
+from credit.views import credit_configuration_list, user_credit_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,7 +15,7 @@ urlpatterns = [
     path('create_transaction/', login_view, name="create_transaction"),
 
     path('credits/', credit_configuration_list, name='credits_list'),
-    path('my_credits/', two_factor_auth, name="my_credits"),
+    path('my_credits/', user_credit_list, name="user_credit_list"),
     path('take_credit/', login_view, name="take_credit"),
 
     path('my_stats/', two_factor_auth, name="my_stats"),

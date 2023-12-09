@@ -14,8 +14,8 @@ class CurrencyAccount(models.Model):
         on_delete=models.SET_DEFAULT,
         default=constants.currency.CURRENCY_CODE_USDT
     )
-    user = models.OneToOneField('user.User', on_delete=models.CASCADE, related_name='+')
-    balance = models.FloatField()
+    user = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='+')
+    balance = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):
         return f'{self.user} {self.currency} {self.balance}'

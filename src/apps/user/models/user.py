@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from encrypted_model_fields.fields import EncryptedCharField
 from django.utils.translation import gettext_lazy as _
@@ -7,16 +8,23 @@ __all__ = (
     'User',
 )
 
+from user.manager import MyUserManager
 
-class User(AbstractBaseUser):
+
+class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=15)
-    phone_number = models.CharField(max_length=13)
+    phone_number = models.CharField(max_length=13, unique=True)
     secret_code = EncryptedCharField(_('OTP code'), max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(_('Date and time of creation'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Date and time of update'), auto_now=True)
     secret_code_updated_at = models.DateTimeField(_('Date and time of otp code update'), auto_now=True)
 
-    USERNAME_FIELD = 'name'
+    USERNAME_FIELD = 'phone_number'
+    objects = MyUserManager()
+
+    @property
+    def is_staff(self):
+        return True
 
     def __str__(self):
         return self.name

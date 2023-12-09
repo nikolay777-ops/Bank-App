@@ -4,7 +4,7 @@
 {% for account in accounts %}
 <div class="card mx-auto mt-8" style="width: 18rem;">
   <div class="card-header bg-primary text-white text-center">
-    <h2 class="font-semibold">{{ account.currency }} Details</h2>
+    <h2 class="font-semibold">{{ account.currency.name }} Details</h2>
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
@@ -13,7 +13,7 @@
     </li>
     <li class="list-group-item">
       <span class="font-weight-bold">Owner:</span>
-      <span class="text-danger font-weight-bold">{{ account.owner.name }}</span>
+      <span class="text-danger font-weight-bold">{{ account.user.name }}</span>
     </li>
   </ul>
 </div>

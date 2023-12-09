@@ -13,7 +13,7 @@
             <span class="font-weight-bold">Amount:</span>
             <span class="text-success font-weight-bold">{{ credit_configuration.amount }}</span> <br>
             <span class="font-weight-bold">Interest rate:</span>
-            <span class="text-info font-weight-bold">{{ credit_configuration.interest_rate }}</span> <br>
+            <span class="text-info font-weight-bold">{{ credit_configuration.interest_rate }} %</span> <br>
             <span class="font-weight-bold">Term months:</span>
             <span class="text-warning font-weight-bold">{{ credit_configuration.term_months }}</span> <br>
             <span class="font-weight-bold">Currency:</span>
@@ -21,7 +21,7 @@
           </div>
           <form method="post" action="{% url 'credits_list' %}">
             {% csrf_token %}
-            <input type="hidden" name="credit_configuration_id" value="{{ credit_configuration.id }}">
+            <input type="hidden" name="credit_configuration_id" value="{{ credit_configuration.pk }}">
             <button type="submit" class="btn btn-primary">
               Select
             </button>

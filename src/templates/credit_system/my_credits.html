@@ -1,34 +1,37 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 
 {% block content %}
-<div class="card mx-auto mt-8" style="width: 18rem;">
-  <div class="card-header bg-primary text-white text-center">
-    <h2 class="font-semibold">Available Credits</h2>
-  </div>
-  <ul class="list-group list-group-flush">
-    {% for credit_configuration in credit_configurations %}
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <span class="font-weight-bold">Amount:</span>
-            <span class="text-success font-weight-bold">{{ credit_configuration.amount }}</span> <br>
-            <span class="font-weight-bold">Interest rate:</span>
-            <span class="text-info font-weight-bold">{{ credit_configuration.interest_rate }}</span> <br>
-            <span class="font-weight-bold">Term months:</span>
-            <span class="text-warning font-weight-bold">{{ credit_configuration.term_months }}</span> <br>
-            <span class="font-weight-bold">Currency:</span>
-            <span class="text-danger font-weight-bold">{{ credit_configuration.currency.name }}</span>
-          </div>
-          <form method="post" action="{% url 'credits_list' %}">
-            {% csrf_token %}
-            <input type="hidden" name="credit_configuration_id" value="{{ credit_configuration.id }}">
-            <button type="submit" class="btn btn-primary">
-              Select
-            </button>
-          </form>
+<html lang="en">
+<head>
+    <title>Credit Pay Entities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Assuming 'entities' is a list of CreditPayEntity objects -->
+        {% for entity in entities %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Entity {{ entity.pk }}</h5>
+                <p class="card-text">
+                    Amount: {{ entity.amount }}<br>
+                    Interest Rate: {{ entity.interest_rate }}<br>
+                    Term (months): {{ entity.term_month }}<br>
+                    Currency: {{ entity.currency }}<br>
+                    Available Cash: {{ entity.available_cash }}
+                </p>
+                <form action={% url 'user_credit_list' %} method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="number" step="0.01" min="0" max="{{ entity.available_cash }}" class="form-control" name="inputField" placeholder="Enter amount">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
-      </li>
-    {% endfor %}
-  </ul>
-</div>
+        {% endfor %}
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
 {% endblock %}
