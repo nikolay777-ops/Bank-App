@@ -18,7 +18,6 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)  # Сохранение формы, но не коммитить в базу данных
             user.role_id = Role.objects.get(id=1)
-            user.account_id = Account.objects.create(amount=0.00)  # Установка объекта Account в поле account_id
             secret_key = generate_secret_key()
             user.secret_code = secret_key
             user.save()

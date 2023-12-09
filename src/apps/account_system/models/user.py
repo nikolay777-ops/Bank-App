@@ -14,7 +14,6 @@ class User(AbstractBaseUser):
     secret_code = EncryptedCharField(_('secret code'), max_length=100, null=True, blank=True)
     secret_code_updated_at = models.DateTimeField(_('Date and time of secret code update'), auto_now=True)
     role_id = models.ForeignKey('Role', on_delete=models.CASCADE, related_name='users')
-    account_id = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='users')
 
     USERNAME_FIELD = 'name'
 

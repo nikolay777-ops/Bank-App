@@ -14,7 +14,8 @@ def credit_configuration_list(request):
 
     if user_name and secret_key:
         if request.method == 'GET':
-            credit_configs = Credit.objects.only('configuration').filter(~Q(user__phone_number=phone_num))
+            user_credits = Credit.objects.only('configuration').filter(user__phone_number=phone_num)
+            credit_configs = CreditConfiguration.objects.exclude(pk__in=user_credits.values_list('pk', flat=True))
             return render(
                 request,
                 'credit_system/credit_list.html',
