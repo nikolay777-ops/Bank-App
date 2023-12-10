@@ -20,9 +20,8 @@ class PhoneNumberBackend(ModelBackend):
 
         if user.check_password(password):
             return user
-        else:
-            errors = {'password1': ['Incorrect password']}
-            return errors
+
+        return None
 
     def get_user(self, user_id):
         UserModel = get_user_model()
