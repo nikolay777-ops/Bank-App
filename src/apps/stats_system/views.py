@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from transaction_system.models import Transaction
-from account_system.models import User
+from account_system.models import User, Account
 from django.db.models import Q
 
 from django.db.models import Avg, Sum
@@ -15,41 +15,62 @@ def statistics_view(request):
         current_datetime = timezone.now()
         last_month_datetime = current_datetime - timedelta(days=30)
         last_year_datetime = current_datetime - timedelta(days=365)
+        currencies = list(Account.objects.filter(Q(owner=user.id)).values_list('currency', flat=True))
+        stats = []
+        for currency in currencies:
+            # Вычисляем средний чек за последний месяц
+            result = Transaction.objects.filter(
+                Q(timestamp__gte=last_month_datetime) &
+                Q(corespondent_id=user.id) &
+                Q(success=True) &
+                Q(currency=currency)
+            ).aggregate(Avg('amount'))['amount__avg']
 
-        # Вычисляем средний чек за последний месяц
-        result = Transaction.objects.filter(
-            Q(timestamp__gte=last_month_datetime) &
-            Q(corespondent_id=user.id) &
-            Q(success=True)
-        ).aggregate(Avg('amount'))['amount__avg']
+            if result is not None:
+                average_amount_last_month = round(result, 2)
+            else:
+                average_amount_last_month = 0.00
 
-        average_amount_last_month = round(result, 2)
+            income_last_month = Transaction.objects.filter(
+                Q(timestamp__gte=last_month_datetime) &
+                Q(recipient_id=user.id) &
+                Q(success=True) &
+                Q(currency=currency)
+            )
 
-        income_last_month = Transaction.objects.filter(
-            Q(timestamp__gte=last_month_datetime) &
-            Q(recipient_id=user.id) &
-            Q(success=True)
-        )
+            # Вычисляем средний доход за последний месяц
+            if income_last_month is not None:
+                average_income_last_month = round(
+                    income_last_month.aggregate(Sum('amount'))['amount__sum'] / income_last_month.count(), 2)
+                index = int(income_last_month.count() / 2)
+                my_list = list(income_last_month.values_list('amount', flat=True))
+                # Вычисляем медианный доход за последний месяц
+                median_income_last_month = round(my_list[index], 2)
+            else:
+                average_income_last_month = 0.00
+                median_income_last_month = 0.00
 
-        # Вычисляем средний доход за последний месяц
-        average_income_last_month = income_last_month.aggregate(Sum('amount'))['amount__sum'] / income_last_month.count()
-        index = int(income_last_month.count() / 2)
-        my_list = list(income_last_month.values_list('amount', flat=True))
-        # Вычисляем медианный доход за последний месяц
-        median_income_last_month = my_list[index]
-
-        # Вычисляем средний доход за последний год
-        income_last_year = Transaction.objects.filter(
-            Q(timestamp__gte=last_year_datetime) &
-            Q(recipient_id=user.id) &
-            Q(success=True)
-        )
-        average_income_last_year = income_last_year.aggregate(Sum('amount'))['amount__sum'] / income_last_year.count()
+            # Вычисляем средний доход за последний год
+            income_last_year = Transaction.objects.filter(
+                Q(timestamp__gte=last_year_datetime) &
+                Q(recipient_id=user.id) &
+                Q(success=True) &
+                Q(currency=currency)
+            )
+            if income_last_year is not None:
+                average_income_last_year = round(income_last_year.aggregate(Sum('amount'))['amount__sum'] / income_last_year.count(), 2)
+            else:
+                average_income_last_year = 0.00
+            stat = {
+                'average_amount_last_month': average_amount_last_month,
+                'average_income_last_month': average_income_last_month,
+                'median_income_last_month': median_income_last_month,
+                'average_income_last_year': average_income_last_year,
+                'currency': currency,
+            }
+            stats.append(stat)
         return render(request, 'stats_system/my_stat.html', {
-            'average_amount_last_month': average_amount_last_month,
-            'average_income_last_month': average_income_last_month,
-            'median_income_last_month': median_income_last_month,
-            'average_income_last_year': average_income_last_year
+            'stats': stats
         })
     else:
         return redirect('home')

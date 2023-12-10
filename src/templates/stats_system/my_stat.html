@@ -8,6 +8,8 @@
     <table class="table table-striped table-bordered table-hover">
   <thead>
     <tr class="table" style="background-color: #242424; color: white">
+      <th>Currency
+      </th>
       <th>Average check over the past month</th>
       <th>Average income for the last month</th>
       <th>Median income for the last month</th>
@@ -15,12 +17,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr class="table" style="background-color: rgb(0,139,127); color: white">
-      <td>{{ average_amount_last_month }}</td>
-      <td>{{ average_income_last_month }}</td>
-      <td>{{ median_income_last_month }}</td>
-      <td>{{ average_income_last_year }}</td>
-    </tr>
+    {% for stat in stats %}
+      <tr class="table" style="background-color: rgb(0,139,127); color: white">
+        <td>{{ stat.currency }}</td>
+        <td>{{ stat.average_amount_last_month }}</td>
+        <td>{{ stat.average_income_last_month }}</td>
+        <td>{{ stat.median_income_last_month }}</td>
+        <td>{{ stat.average_income_last_year }}</td>
+      </tr>
+   {% endfor %}
   </tbody>
 </table>
 </div>

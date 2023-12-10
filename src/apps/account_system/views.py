@@ -8,6 +8,7 @@ from .forms import RegistrationForm, LoginForm
 from .models import User
 from account_system.infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
 from django.core.cache import cache
+from transaction_system.infrastructure.services.loyalty_program import loyalty_program
 
 from django.contrib.auth import login, authenticate, logout
 
@@ -141,6 +142,7 @@ def two_factor_auth(request):
             login(request, user)
             cache.delete('phone_num')
             cache.delete(f"2fa_secret_key_{user.name}")
+            loyalty_program(request)
             return redirect('home')
 
         else:

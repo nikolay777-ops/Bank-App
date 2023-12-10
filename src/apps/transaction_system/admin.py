@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from transaction_system.models import Transaction
+from transaction_system.models import Transaction, LoyaltyConfig
 from account_system.models import User, Currency
 
 
@@ -20,3 +20,12 @@ class TransactionAdminForm(forms.ModelForm):
 @admin.register(Transaction)
 class TransactionViewAdmin(admin.ModelAdmin):
     form = TransactionAdminForm
+
+class LoyaltyConfigAdminForm(forms.ModelForm):
+    class Meta:
+        model = LoyaltyConfig
+        fields = '__all__'
+
+@admin.register(LoyaltyConfig)
+class LoyaltyConfigViewAdmin(admin.ModelAdmin):
+    form = LoyaltyConfigAdminForm
