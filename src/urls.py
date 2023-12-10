@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from credit_system.views import credit_configuration_list
+from credit_system.views import credit_configuration_list, user_credit_list
 from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, logout_view, accounts_view, account_view
 from transaction_system.views import transaction_history
 from stats_system.views import statistics_view
@@ -37,7 +37,7 @@ urlpatterns = [
     path('transaction_history/', transaction_history, name="transaction_history"),
 
     path('credits/', credit_configuration_list, name='credits_list'),
-    path('my_credits/', two_factor_auth, name="my_credits"),
+    path('my_credits/', user_credit_list, name="user_credit_list"),
     path('take_credit/', login_view, name="take_credit"),
 
     path('my_stats/', statistics_view, name="my_stats"),

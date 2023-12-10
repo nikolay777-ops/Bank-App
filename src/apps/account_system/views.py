@@ -114,7 +114,7 @@ def login_view(request):
 def account_view(request, currency):
     if isinstance(request.user, User):
         phone_num = request.user.phone_number
-        accounts = Account.objects.filter(user__phone_number=phone_num, currency__name=currency)
+        accounts = Account.objects.filter(owner__phone_number=phone_num, currency__name=currency)
         return render(request, 'account_system/account.html', {'accounts': accounts})
     return redirect('login')
 
@@ -122,7 +122,7 @@ def account_view(request, currency):
 def accounts_view(request):
     if isinstance(request.user, User):
         phone_num = request.user.phone_number
-        accounts = Account.objects.filter(user__phone_number=phone_num)
+        accounts = Account.objects.filter(owner__phone_number=phone_num)
         return render(request, 'account_system/account.html', {'accounts': accounts})
     return redirect('login')
 

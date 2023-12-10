@@ -5,14 +5,13 @@ __all__ = (
     'Credit',
 )
 
-from account_system.models import User
-
 
 class Credit(models.Model):
-    user = models.ForeignKey(
-        User,
-        related_name='user_credit',
-        on_delete=models.CASCADE,
+    currency_account = models.ForeignKey(
+        'account_system.Account',
+        related_name='credit_currency_account',
+        on_delete=models.SET_NULL,
+        null=True
     )
     configuration = models.ForeignKey(
         'CreditConfiguration',
@@ -21,6 +20,7 @@ class Credit(models.Model):
     )
     monthly_payment = models.DecimalField(max_digits=10, decimal_places=2)
     remaining_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    closed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -28,4 +28,3 @@ class Credit(models.Model):
         app_label = 'credit_system'
         verbose_name = _('Credit')
         verbose_name_plural = _('Credits')
-        unique_together = ('user', 'configuration')
