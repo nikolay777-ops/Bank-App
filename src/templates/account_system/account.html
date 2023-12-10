@@ -1,21 +1,39 @@
 {% extends 'core/base.html' %}
-
 {% block content %}
-{% for account in accounts %}
-<div class="card mx-auto mt-8" style="width: 18rem;">
-  <div class="card-header bg-primary text-white text-center">
-    <h2 class="font-semibold">{{ account.currency.name }} Details</h2>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      <span class="font-weight-bold">Amount:</span>
-      <span class="text-success font-weight-bold">{{ account.balance }} USD</span>
-    </li>
-    <li class="list-group-item">
-      <span class="font-weight-bold">Owner:</span>
-      <span class="text-danger font-weight-bold">{{ account.user.name }}</span>
-    </li>
-  </ul>
-</div>
-{% endfor %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Add this rule to change the color of the text inside the <td> elements to white */
+        td, tr, h1 {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Bank Accounts Information</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Currency</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for account in accounts  %}
+                <tr>
+                    <td>{{ account.currency.name }}</td>
+                    <td>{{ account.balance }}</td>
+                </tr>
+            {% endfor %}
+                <!-- Add more accounts as needed -->
+            </tbody>
+        </table>
+    </div><!-- Add Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
 {% endblock %}

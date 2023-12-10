@@ -9,7 +9,7 @@ from .models import User
 from .infrastructure.services.oauth import generate_secret_key, generate_qr_code, verify_otp
 from django.core.cache import cache
 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 
 
 def register(request):
@@ -154,3 +154,8 @@ def two_factor_auth(request):
 
     else:
         return render(request, 'account_system/two_factor_auth.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
