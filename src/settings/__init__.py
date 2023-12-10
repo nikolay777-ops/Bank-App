@@ -104,4 +104,12 @@ IS_SWAGGER_ENABLE = env.bool('IS_SWAGGER_ENABLE', default=True)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_COOKIE_AGE = 86400
+SESSION_SAVE_EVERY_REQUEST = True
+
+AUTH_USER_MODEL = 'account_system.User'
+
+AUTHENTICATION_BACKENDS = [
+    'account_system.backends.PhoneNumberBackend',
+]

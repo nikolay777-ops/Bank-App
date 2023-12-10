@@ -3,13 +3,13 @@ from io import BytesIO
 
 from django.shortcuts import render, redirect
 
+from account_system.models import Account
 from .forms import RegistrationForm, LoginForm
-from .models import Account, Role, User
-from .infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
-from account_system.infrastructure.services.user_check_in_session import user_check_in_session
+from .models import User
+from account_system.infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
 from django.core.cache import cache
 
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 
 def register(request):
@@ -17,15 +17,14 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)  # Сохранение формы, но не коммитить в базу данных
-            user.role_id = Role.objects.get(id=1)
             secret_key = generate_secret_key()
             user.secret_code = secret_key
             user.save()
 
             # cache user-secret code
-            cache.set(f'user_name', user.name, 3600)
-            cache.set(f"2fa_secret_key_{user.name}", secret_key, 3600)
-            cache.set(f'phone_num', user.phone_number, 3600)
+            cache.set(f'user_name', user.name, 300)
+            cache.set(f"2fa_secret_key_{user.name}", secret_key, 300)
+            cache.set(f'phone_num', user.phone_number, 300)
 
             return redirect('two_factor_auth_qrcode')
 
@@ -65,7 +64,11 @@ def two_factor_auth_qr_code(request):
         elif request.method == 'POST':
             verification_code = request.POST['verification_code']
             if verify_otp(secret=secret_key, otp=verification_code):
-                return redirect('home')
+                username = cache.get('user_name')
+                cache.delete(f"2fa_secret_key_{username}")
+                cache.delete(f'user_name')
+                cache.delete(f'phone_num')
+                return redirect('login')
             else:
                 errors = {'verification_code': ['Invalid verification code']}
                 return render(
@@ -78,13 +81,7 @@ def two_factor_auth_qr_code(request):
 
 
 def home(request):
-    user = user_check_in_session(request, cache)
-    if user:
-        cache.set(f'user_name', user.name, 3600)
-        request.session['user_id'] = user.id
-        return render(request, 'core/home.html', {'user': user})
-    else:
-        return render(request, 'core/home.html')
+    return render(request, 'core/home.html')
 
 
 def login_view(request):
@@ -94,85 +91,66 @@ def login_view(request):
             phone_number = form.cleaned_data['phone_number']
             password1 = form.cleaned_data['password1']
 
-            # Проверяем пользователя по номеру телефона
-            try:
-                user = User.objects.get(phone_number=phone_number)
-                if user.check_password(password1):
-                    login(request, user)
-                    request.session['user_id'] = user.id
-                    secret_key = user.secret_code
+            user = authenticate(
+                request,
+                phone_number=phone_number,
+                password=password1
+            )
+            if not isinstance(user, dict):
+                cache.set(f"2fa_secret_key_{user.name}", user.secret_code, 300)
+                cache.set(f'phone_num', user.phone_number, 300)
+                return redirect('two_factor_auth')
 
-                    # cache user-secret code
-                    cache.set(f'user_name', user.name, 3600)
-                    cache.set(f"2fa_secret_key_{user.name}", secret_key, 3600)
-                    cache.set(f'phone_num', user.phone_number, 3600)
+            else:
+                return render(request, 'account_system/login.html', user)
 
-                    return redirect('two_factor_auth')
-                else:
-                    errors = {'password1': ['Incorrect password']}
-                    return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
-            except User.DoesNotExist:
-                errors = {'phone_number': ['User with this phone number does not exist']}
-                return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
-        else:
-            errors = form.errors
-            return render(request, 'account_system/login.html', {'form': form, 'errors': errors})
-    else:
-        form = LoginForm()
-    return render(request, 'account_system/login.html', {'form': form})
+    return render(request, 'account_system/login.html', {'form': LoginForm()})
 
 
 def account_view(request, currency):
-    user_name = cache.get(f'user_name')
-    secret_key = cache.get(f"2fa_secret_key_{user_name}")
-    phone_num = cache.get('phone_num')
-    if user_name and secret_key:
-        user = User.objects.get(name=user_name)
-        request.session['user_id'] = user.id
-        cache.set(f'user_name', user.name, 3600)
-        account = Account.objects.get(owner__name=user_name, owner__phone_number=phone_num, currency__name=currency)
-        return render(request, 'account_system/account.html', {'accounts': [account]})
-
+    if isinstance(request.user, User):
+        phone_num = request.user.phone_number
+        accounts = Account.objects.filter(user__phone_number=phone_num, currency__name=currency)
+        return render(request, 'account_system/account.html', {'accounts': accounts})
     return redirect('login')
 
 
 def accounts_view(request):
-    user_name = cache.get(f'user_name')
-    secret_key = cache.get(f"2fa_secret_key_{user_name}")
-    phone_num = cache.get('phone_num')
-    if user_name and secret_key:
-        user = User.objects.get(name=user_name)
-        request.session['user_id'] = user.id
-        cache.set(f'user_name', user.name, 3600)
-        accounts = Account.objects.filter(owner__name=user_name, owner__phone_number=phone_num)
+    if isinstance(request.user, User):
+        phone_num = request.user.phone_number
+        accounts = Account.objects.filter(user__phone_number=phone_num)
         return render(request, 'account_system/account.html', {'accounts': accounts})
-
     return redirect('login')
 
 
 def two_factor_auth(request):
-    user = user_check_in_session(request, cache)
-    if user:
-        request.session['user_id'] = user.id
-        if request.method == 'POST':
-            user_name = cache.get(f'user_name')
-            secret_key = cache.get(f"2fa_secret_key_{user_name}")
-            if user_name and secret_key:
-                verification_code = request.POST['verification_code']
-                if verify_otp(secret=secret_key, otp=verification_code):
-                    request.session['user_id'] = user.id
-                    cache.set(f'user_name', user.name, 3600)
-                    return redirect('home')
-                else:
-                    errors = {'verification_code': 'Invalid verification code'}
-                    return render(
-                        request,
-                        'account_system/two_factor_auth.html',
-                        {'errors': errors}
-                    )
-            else:
-                return redirect('login')
-        else:
-            return render(request, 'account_system/two_factor_auth.html')
-    else:
+    phone_num = cache.get('phone_num')
+    try:
+        user = User.objects.get(phone_number=phone_num)
+        secret_key = cache.get(f"2fa_secret_key_{user.name}")
+    except User.DoesNotExist:
         return redirect('login')
+
+    if request.method == 'POST':
+        verification_code = request.POST['verification_code']
+
+        if verify_otp(secret=secret_key, otp=verification_code):
+            login(request, user)
+            cache.delete('phone_num')
+            cache.delete(f"2fa_secret_key_{user.name}")
+            return redirect('home')
+
+        else:
+            errors = {
+                'verification_code': [
+                    'Invalid verification code',
+                ]
+            }
+            return render(
+                request,
+                'account_system/two_factor_auth.html',
+                {'errors': errors}
+            )
+
+    else:
+        return render(request, 'account_system/two_factor_auth.html')

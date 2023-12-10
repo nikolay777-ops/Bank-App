@@ -7,8 +7,8 @@ from account_system.models import User
 from django.db.models import Q
 
 def transaction_history(request):
-    user = user_check_in_session(request, cache)
-    user = User.objects.get(phone_number='+375291395681')
+    phone_num = cache.get('phone_num')
+    user = User.objects.get(phone_number=phone_num)
     if user:
         request.session['user_id'] = user.id
         transactions = list(Transaction.objects.filter(Q(recipient_id=user.id) | Q(corespondent_id=user.id)))
