@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from stocks.views import list_stock
+from stocks.views import list_stock, investment_portfolio_view, sell_all_stocks_view
 from user.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, accounts_view, \
     account_view, logout_view
 from credit.views import credit_configuration_list, user_credit_list
@@ -26,4 +26,6 @@ urlpatterns = [
     path('accounts/', accounts_view, name='accounts_list'),
     path('logout/', logout_view, name='logout'),
     path('stocks/', list_stock, name='stock_list'),
+    path('investment-portfolio/', investment_portfolio_view, name='investment_portfolio_view'),
+    path('sell-all/', sell_all_stocks_view, name='sell_all_stocks'),
 ]

@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
 
+from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 
 from currency_rates.models import CurrencyAccount
@@ -85,31 +86,33 @@ def home(request):
 
 
 def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            phone_number = form.cleaned_data['phone_number']
-            password1 = form.cleaned_data['password1']
+    if isinstance(request.user, AnonymousUser):
+        if request.method == 'POST':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                phone_number = form.cleaned_data['phone_number']
+                password1 = form.cleaned_data['password1']
 
-            user = authenticate(
-                request,
-                phone_number=phone_number,
-                password=password1
-            )
-            if user is not None:
-                cache.set(f"2fa_secret_key_{user.name}", user.secret_code, 300)
-                cache.set(f'phone_num', user.phone_number, 300)
-                return redirect('two_factor_auth')
-            else:
-                errors = {'error': 'Invalid phone number of password'}
-                context = {
-                    'form': form,
-                    'errors': errors
-                }
-                return render(request, 'account_system/login.html', context)
+                user = authenticate(
+                    request,
+                    phone_number=phone_number,
+                    password=password1
+                )
+                if user is not None:
+                    cache.set(f"2fa_secret_key_{user.name}", user.secret_code, 300)
+                    cache.set(f'phone_num', user.phone_number, 300)
+                    return redirect('two_factor_auth')
+                else:
+                    errors = {'error': 'Invalid phone number of password'}
+                    context = {
+                        'form': form,
+                        'errors': errors
+                    }
+                    return render(request, 'account_system/login.html', context)
 
-    return render(request, 'account_system/login.html', {'form': LoginForm()})
+        return render(request, 'account_system/login.html', {'form': LoginForm()})
 
+    return redirect('home')
 
 def account_view(request, currency):
     if isinstance(request.user, User):

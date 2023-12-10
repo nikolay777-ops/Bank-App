@@ -11,6 +11,7 @@ from django.db.models.functions import Rank
 class CurrencyRatesDAO(ICurrencyRateDAO, ABC):
     def _orm_to_entity(self, orm_object: CurrencyRate) -> CurrencyRateEntity:
         currency_rate_entity = CurrencyRateEntity(
+            pk=orm_object.pk,
             currency=orm_object.currency.name,
             rate=orm_object.rate,
             date_of_use=orm_object.date_of_use,
@@ -43,10 +44,10 @@ class CurrencyRatesDAO(ICurrencyRateDAO, ABC):
             currency_pk: str
     ) -> CurrencyRateEntity:
 
-        currency_rate = CurrencyRate.objects.filter(currency__id=currency_pk).order_by('-date_of_use')
+        currency_rate = CurrencyRate.objects.filter(currency_id=currency_pk).order_by('-date_of_use')
 
         entity = None
         if currency_rate:
-            entity = self._orm_to_entity(orm_object=currency_rate)
+            entity = self._orm_to_entity(orm_object=currency_rate[0])
 
         return entity

@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Rate Information</title>
+    <!-- Add Bootstrap CSS -->
+    <style>
+        /* Add this rule to change the color of the text inside the <td> elements to white */
+        td, h1, th {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Stock Rate Information</h1>
+        {% if errors %}
+            <div class="text-danger">{{ errors.error }}</div>
+        {% endif %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Rate (USD)</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Investment Portfolio</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Investment Portfolio</th>
+                    <th scope="col"></th> <!-- For the submit button -->
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for stock_price in stock_prices %}
+            <form method="post" action="{% url 'stock_list' %}">
+            {% csrf_token %}
+                <tr>
+                <input type="hidden" name="stock_name" value="{{ stock_price.stock.name }}">
+                <input type="hidden" name="stock_price_pk" value="{{ stock_price.pk }}">
+                <input type="hidden" name="stock_rate" value="{{ stock_price.rate }}">
+                    <td>{{ stock_price.stock.name }}</td>
+                    <td>{{ stock_price.rate }}</td>
+                {% if user.is_authenticated %}
+                    <td>
+                        <select class="form-control" name="account">
+                            {% for account in accounts %}
+                                <option value={{ account.pk }}>{{ account }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="amount_{{ stock_price.stock.name }}" class="form-control" placeholder="Enter amount" min="1"></td>
+                    <td>
+                        <select class="form-control" name="portfolio">
+                            {% for portfolio in portfolios %}
+                                <option value="{{ portfolio.pk }}">{{ portfolio.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><button type="submit" class="btn btn-primary">Submit</button></td>
+                {% endif %}
+                </tr>
+            </form>
+            {% endfor %}
+                <!-- Add more stocks as needed -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Add Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

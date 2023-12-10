@@ -17,3 +17,4 @@ class InvestmentPortfolio(models.Model):
         app_label = 'stocks'
         verbose_name = _('Investment portfolio')
         verbose_name_plural = _('Investment portfolios')
+        unique_together = ('owner', 'name')
