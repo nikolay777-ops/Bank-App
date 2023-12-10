@@ -4,6 +4,7 @@ __all__ = (
     'DATABASES',
 )
 
+BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
 
 DATABASES = {
     'default': {
@@ -13,5 +14,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'bank-app'),
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR + 'db.sqlite3',
     }
 }

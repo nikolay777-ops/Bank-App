@@ -1,29 +1,25 @@
 import os
 import sys
 
-import environ
-
 from .apps import *
 from .databases import *
 from .environment import *
 from .celery import *
 from .logging import *
 
-env = environ.Env()
-
 BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
 sys.path.append(BASE_DIR)
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ov695n#ol+qtp^2_&zfi9o93w(#6ej*o2b!r4!j2d-u+j%92rl'
 # SECURITY WARNING: don't run with debug turned on in production!
-FIELD_ENCRYPTION_KEY = env('FIELD_ENCRYPTION_KEY', default='eP1DLk6t3mL2ZAmtAaInP5Mrbfza3dDXLNiwAhKbfxo=')
+FIELD_ENCRYPTION_KEY = 'eP1DLk6t3mL2ZAmtAaInP5Mrbfza3dDXLNiwAhKbfxo='
 
 
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = ['*']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,8 +95,6 @@ STATIC_URL = '/static/'
 
 
 LOCK_DIR = '/var/lock'
-
-IS_SWAGGER_ENABLE = env.bool('IS_SWAGGER_ENABLE', default=True)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

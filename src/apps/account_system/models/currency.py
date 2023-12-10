@@ -9,7 +9,7 @@ __all__ = (
 
 
 class Currency(models.Model):
-    name = models.CharField(primary_key=True, choices=constants.currency.ALL_CURRENCY_CODES_CHOICES)
+    name = models.CharField(primary_key=True, choices=constants.currency.ALL_CURRENCY_CODES_CHOICES, max_length=4)
 
     def __str__(self):
         return f'{self.name}'
