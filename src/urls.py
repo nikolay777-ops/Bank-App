@@ -19,6 +19,7 @@ from django.urls import path
 from credit_system.views import credit_configuration_list
 from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, logout_view, accounts_view, account_view
 from transaction_system.views import transaction_history
+from stats_system.views import statistics_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,8 @@ urlpatterns = [
     path('login/', login_view, name="login"),
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
     path('/logout', logout_view, name="logout"),
+    path('accounts/<str:currency>', account_view, name='account_list'),
+    path('accounts/', accounts_view, name='accounts_list'),
 
     path('create_transaction/', login_view, name="create_transaction"),
     path('transaction_history/', transaction_history, name="transaction_history"),
@@ -37,7 +40,6 @@ urlpatterns = [
     path('my_credits/', two_factor_auth, name="my_credits"),
     path('take_credit/', login_view, name="take_credit"),
 
-    path('my_stats/', two_factor_auth, name="my_stats"),
-    path('accounts/<str:currency>', account_view, name='account_list'),
-    path('accounts/', accounts_view, name='accounts_list'),
+    path('my_stats/', statistics_view, name="my_stats"),
+
 ]

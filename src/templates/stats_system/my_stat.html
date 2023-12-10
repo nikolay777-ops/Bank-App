@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'core/base.html' %}
+{% block content %}
 
-</body>
-</html>
+<h1>Статистика</h1>
+
+<p>Средний чек за последний месяц: {{ average_amount_last_month }}</p>
+<p>Средний доход за последний месяц: {{ average_income_last_month }}</p>
+<p>Медианный доход за последний месяц: {{ median_income_last_month }}</p>
+<p>Средний доход за последний год: {{ average_income_last_year }}</p>
+
+{% endblock %}

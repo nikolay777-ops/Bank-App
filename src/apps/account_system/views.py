@@ -73,7 +73,7 @@ def two_factor_auth_qr_code(request):
                 cache.delete(f'phone_num')
                 return redirect('login')
             else:
-                errors = {'verification_code': ['Invalid verification code']}
+                errors = {'verification_code': 'Invalid verification code'}
                 return render(
                     request,
                     'account_system/two_factor_auth_qrcode.html',
