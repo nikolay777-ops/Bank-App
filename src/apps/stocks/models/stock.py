@@ -8,7 +8,7 @@ __all__ = (
 
 
 class Stock(models.Model):
-    name = models.CharField(primary_key=True, choices=ALL_STOCK_CHOICES)
+    name = models.CharField(primary_key=True, choices=ALL_STOCK_CHOICES, max_length=5)
 
     def __str__(self):
         return self.name
