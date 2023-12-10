@@ -14,6 +14,9 @@ class CreditConfiguration(models.Model):
     currency = models.ForeignKey('currency_rates.Currency', on_delete=models.SET_NULL, null=True, related_name='+')
     name = models.CharField()
 
+    def __str__(self):
+        return f'{self.currency} Amount:{self.amount} Rate:{self.interest_rate} Term month: {self.term_months}'
+
     class Meta:
         app_label = 'credit'
         verbose_name = _('Credit Configuration')

@@ -12,7 +12,18 @@ class CreditRequestAdminForm(forms.ModelForm):
 
 @admin.register(Credit)
 class CreditRequestViewAdmin(admin.ModelAdmin):
+    def phone_number(self, obj):
+        return obj.user.phone_number
+
     form = CreditRequestAdminForm
+    list_display = (
+        'pk',
+        'phone_number',
+        'configuration',
+        'monthly_payment',
+        'remaining_amount',
+        'closed',
+    )
 
 
 class CreditPaymentAdminForm(forms.ModelForm):
@@ -35,3 +46,10 @@ class GeneralConfigAdminForm(forms.ModelForm):
 @admin.register(CreditConfiguration)
 class CreditRequestViewAdmin(admin.ModelAdmin):
     form = GeneralConfigAdminForm
+    list_display = (
+        'pk',
+        'currency',
+        'amount',
+        'interest_rate',
+        'term_months',
+    )

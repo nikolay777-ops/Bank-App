@@ -1,11 +1,6 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-<html lang="en">
-<head>
-    <title>Credit Pay Entities</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
 <body>
     <div class="container">
         <!-- Assuming 'entities' is a list of CreditPayEntity objects -->
@@ -18,12 +13,14 @@
                     Interest Rate: {{ entity.interest_rate }}<br>
                     Term (months): {{ entity.term_month }}<br>
                     Currency: {{ entity.currency }}<br>
+                    Monthly Payment: {{ entity.monthly_payment }} <br>
                     Available Cash: {{ entity.available_cash }}
                 </p>
                 <form action={% url 'user_credit_list' %} method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="number" step="0.01" min="0" max="{{ entity.available_cash }}" class="form-control" name="inputField" placeholder="Enter amount">
+                        <input type="hidden" name="credit_pk" value="{{ entity.credit_pk }}">
+                        <input type="number" step="0.01" min="0" max="{{ entity.available_cash }}" class="form-control" name="amount" placeholder="Enter amount">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

@@ -5,6 +5,9 @@
   <div class="card-header bg-primary text-white text-center">
     <h2 class="font-semibold">Available Credits</h2>
   </div>
+{% if credit_not_closed %}
+    <div class="text-danger">{{ credit_not_closed }}</div>
+{% endif %}
   <ul class="list-group list-group-flush">
     {% for credit_configuration in credit_configurations %}
       <li class="list-group-item">
