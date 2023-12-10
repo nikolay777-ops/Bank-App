@@ -7,7 +7,7 @@ __all__ = (
 
 
 class Account(models.Model):
-    amount = models.DecimalField(_('Amount of $'), decimal_places=2, max_digits=10)
+    amount = models.DecimalField(_('Amount of money'), decimal_places=2, max_digits=10)
     currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='account_owner', null=True)
 

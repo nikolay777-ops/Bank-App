@@ -6,7 +6,9 @@
     <tr class="table" style="background-color: #242424; color: white">
       <th>Recipient</th>
       <th>Correspondent</th>
-      <th>Amount of $</th>
+      <th>Amount of money</th>
+      <th>Currency</th>
+      <th>Commission</th>
       <th>Timestamp</th>
     </tr>
   </thead>
@@ -17,6 +19,8 @@
       <td>{{ transaction.recipient_name }}</td>
       <td>{{ transaction.corespondent_name }}</td>
       <td>{{ transaction.amount }}</td>
+      <td>{{ transaction.currency }}</td>
+      <td>{{ transaction.commission }}</td>
       <td>{{ transaction.timestamp }}</td>
     </tr>
       {% else %}
@@ -24,6 +28,8 @@
       <td>{{ transaction.recipient_name }}</td>
       <td>{{ transaction.corespondent_name }}</td>
       <td>{{ transaction.amount }}</td>
+      <td>{{ transaction.currency }}</td>
+      <td>{{ transaction.commission }}</td>
       <td>{{ transaction.timestamp }}</td>
     </tr>
       {% endif %}

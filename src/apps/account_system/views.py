@@ -3,13 +3,13 @@ from io import BytesIO
 
 from django.shortcuts import render, redirect
 
-from account_system.models import Account
+from account_system.models import Account, Role
 from .forms import RegistrationForm, LoginForm
 from .models import User
 from account_system.infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
 from django.core.cache import cache
 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 
 
 def register(request):
@@ -17,6 +17,8 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)  # Сохранение формы, но не коммитить в базу данных
+            role = Role.objects.get(name="user")
+            user.role_id = role
             secret_key = generate_secret_key()
             user.secret_code = secret_key
             user.save()
@@ -37,8 +39,9 @@ def register(request):
         context = {
             'form': RegistrationForm()
         }
+        return render(request, 'account_system/registration.html', context)
 
-    return render(request, 'account_system/registration.html', context)
+
 
 
 def two_factor_auth_qr_code(request):
@@ -154,3 +157,7 @@ def two_factor_auth(request):
 
     else:
         return render(request, 'account_system/two_factor_auth.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')

@@ -7,11 +7,12 @@ from account_system.models import User
 from django.db.models import Q
 
 def transaction_history(request):
-    phone_num = cache.get('phone_num')
-    user = User.objects.get(phone_number=phone_num)
-    if user:
+    user = request.user
+    if isinstance(user, User):
         request.session['user_id'] = user.id
-        transactions = list(Transaction.objects.filter(Q(recipient_id=user.id) | Q(corespondent_id=user.id)))
+        transactions = list(reversed(list(Transaction.objects.filter(Q(recipient_id=user.id) |
+                                                                     Q(corespondent_id=user.id) |
+                                                                     Q(success=True)))))
         for transaction in transactions:
             transaction.recipient_name = transaction.recipient_id.name
             transaction.corespondent_name = transaction.corespondent_id.name
@@ -19,4 +20,5 @@ def transaction_history(request):
         return render(request, 'transaction_system/transaction_history.html',
                       {'transactions': transactions, 'user_id': user.id})
     else:
-        return render(request, 'transaction_system/transaction_history.html')
+        return redirect('home')
+
