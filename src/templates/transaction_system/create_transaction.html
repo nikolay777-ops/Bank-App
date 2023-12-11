@@ -14,7 +14,7 @@
                 {% csrf_token %}
 
                 <div class="form-group w-100">
-                    <label for="currency">Валюта:</label>
+                    <label for="currency">Currency:</label>
                     <select name="currency" id="currency" class="form-control">
                         {% for currency in currencies %}
                             <option value="{{ currency }}">{{ currency }}</option>

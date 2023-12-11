@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="col-md-4 mx-auto bg-dark">
+    <div class="container d-flex align-items-center justify-content-center" style="padding-top: 15px; margin-top: 220px">
+        <div class="form-group w-100">
+            <form action="" method="post" class="bg-dark d-flex flex-column align-items-center">
+                {% csrf_token %}
+                {% if currencies %}
+                    <label for="currency" style="display: block;">Currency:</label>
+                    <select name="currency" id="currency" class="form-control" style="width: 100%;">
+                        {% for currency in currencies %}
+                            <option value="{{ currency }}">{{ currency }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-group" style="width: 100%;">
+                        <input type="submit" value="Create" class="btn btn-primary mt-1 mr-2 mb-3" style="width: 100%;">
+                    </div>
+                {% else %}
+                    <div class="container">
+                        <div class="row align-items-center" style="min-height: 20vh; color: white">
+                            <div class="col-md-10 mx-auto text-center">
+                                 <h1>All possible accounts have already been created</h1>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

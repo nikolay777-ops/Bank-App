@@ -67,6 +67,15 @@
             <li class="nav-item">
                 {% if user.is_authenticated %}
             <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown0" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Accounts
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'my_accounts_list' %}">My Accounts</a>
+                    <a class="dropdown-item" href="{% url 'create_account' %}">Create a Account</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Credits
                 </a>

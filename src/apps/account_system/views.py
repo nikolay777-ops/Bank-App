@@ -1,9 +1,11 @@
 import base64
+import random
+from decimal import Decimal
 from io import BytesIO
 
 from django.shortcuts import render, redirect
 
-from account_system.models import Account, Role
+from account_system.models import Account, Role, Currency
 from .forms import RegistrationForm, LoginForm
 from .models import User
 from account_system.infrastructure.services.two_factor_auth import generate_secret_key, generate_qr_code, verify_otp
@@ -11,6 +13,7 @@ from django.core.cache import cache
 from transaction_system.infrastructure.services.loyalty_program import loyalty_program
 
 from django.contrib.auth import login, authenticate, logout
+from django.db.models import Q
 
 
 def register(request):
@@ -172,3 +175,29 @@ def two_factor_auth(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+def my_accounts_list(request):
+    user = request.user
+    if isinstance(user, User):
+        accounts = Account.objects.filter(owner=user.pk)
+        return render(request, 'account_system/my_accounts_list.html',
+                        {'accounts': accounts})
+    else:
+        return redirect('home')
+
+def create_account(request):
+    user = request.user
+    if isinstance(user, User):
+        if request.method == 'POST':
+            currency = Currency.objects.get(name=request.POST['currency'])
+            amount = Decimal(random.uniform(1000.00, 10000.00))
+            Account.objects.create(amount=amount, owner=user, currency=currency)
+            return redirect('my_accounts_list')
+        else:
+            currencies = Currency.objects.all().values_list('name', flat=True)
+            user_currencies = Account.objects.filter(owner=user.pk).values_list('currency__name', flat=True)
+            available_currencies = [currency for currency in currencies if currency not in user_currencies]
+            return render(request, 'account_system/create_account.html',
+                          {'currencies': available_currencies})
+    else:
+        return redirect('home')

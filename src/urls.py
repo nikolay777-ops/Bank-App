@@ -17,7 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from credit_system.views import credit_configuration_list, user_credit_list
-from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, logout_view, accounts_view, account_view
+from account_system.views import (
+    register,
+    home,
+    two_factor_auth_qr_code,
+    login_view,
+    two_factor_auth,
+    logout_view,
+    accounts_view,
+    account_view,
+    create_account,
+    my_accounts_list,
+)
 from transaction_system.views import transaction_history, create_transaction, view_incoming_transactions
 from stats_system.views import statistics_view
 
@@ -32,6 +43,9 @@ urlpatterns = [
     path('logout/', logout_view, name="logout"),
     path('accounts/<str:currency>', account_view, name='account_list'),
     path('accounts/', accounts_view, name='accounts_list'),
+
+    path('create_account', create_account, name='create_account'),
+    path('my_accounts_list/', my_accounts_list, name='my_accounts_list'),
 
     path('create_transaction/', create_transaction, name="create_transaction"),
     path('view_incoming_transactions/', view_incoming_transactions, name="view_incoming_transactions"),
