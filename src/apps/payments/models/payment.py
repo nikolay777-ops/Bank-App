@@ -11,7 +11,8 @@ __all__ = (
 class Payment(models.Model):
     name = models.CharField(
         primary_key=True,
-        choices=ALL_PAYMENT_CODES_CHOICES
+        choices=ALL_PAYMENT_CODES_CHOICES,
+	max_length=10
     )
 
     def __str__(self):

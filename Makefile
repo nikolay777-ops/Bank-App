@@ -24,19 +24,19 @@ migrate:
 	docker exec bank_app_web ./manage.py migrate --noinput
 
 build:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} build
+	docker compose -f ${DOCKER_COMPOSE_FILE} build
 
 up:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} up -d
+	docker compose -f ${DOCKER_COMPOSE_FILE} up -d
 
 log:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} logs -f --tail 100
+	docker compose -f ${DOCKER_COMPOSE_FILE} logs -f --tail 100
 
 stop:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} stop
+	docker compose -f ${DOCKER_COMPOSE_FILE} stop
 
 down:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} down
+	docker compose -f ${DOCKER_COMPOSE_FILE} down
 
 load_all_fixtures:
 	docker exec bank_web ./manage.py loaddata currencies currency_rate_views
