@@ -94,3 +94,33 @@ def create_transaction(request):
                            'user_id': user.id})
     else:
         return redirect('home')
+
+def view_incoming_transactions(request):
+    user = request.user
+    if isinstance(user, User):
+        if request.method == 'POST':
+            transaction_id = request.POST.get('transaction_id')
+            transaction_processor = TransactionProcessor()
+            if transaction_processor.accept_transaction(transaction_id):
+                return redirect('view_incoming_transactions')
+            else:
+                transactions = list(reversed(list(Transaction.objects.filter(Q(recipient_id=user.id) &
+                                                                             Q(accepted=False)))))
+                for transaction in transactions:
+                    transaction.recipient_name = transaction.recipient_id.name
+                    transaction.corespondent_name = transaction.corespondent_id.name
+                    transaction.recipient_id_id = transaction.recipient_id.id
+                return render(request, 'transaction_system/view_incoming_transactions.html',
+                              {'transactions': transactions, 'user_id': user.id,
+                               'error_message':'The corespondent does not have enough funds in the account'})
+        else:
+            transactions = list(reversed(list(Transaction.objects.filter(Q(recipient_id=user.id)  &
+                                                                         Q(accepted=False)))))
+            for transaction in transactions:
+                transaction.recipient_name = transaction.recipient_id.name
+                transaction.corespondent_name = transaction.corespondent_id.name
+                transaction.recipient_id_id = transaction.recipient_id.id
+            return render(request, 'transaction_system/view_incoming_transactions.html',
+                          {'transactions': transactions, 'user_id': user.id})
+    else:
+        return redirect('home')

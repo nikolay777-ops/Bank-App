@@ -63,6 +63,7 @@ class TransactionProcessor(ITransactionProcessor):
                     entity=recipient_account_entity
                 )
                 self.update_transaction(entity=transaction_entity, success=True)
-
+                return True
             else:
                 self.update_transaction(entity=transaction_entity, success=False)
+                return False

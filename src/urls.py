@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from credit_system.views import credit_configuration_list, user_credit_list
 from account_system.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, logout_view, accounts_view, account_view
-from transaction_system.views import transaction_history, create_transaction
+from transaction_system.views import transaction_history, create_transaction, view_incoming_transactions
 from stats_system.views import statistics_view
 
 urlpatterns = [
@@ -34,6 +34,7 @@ urlpatterns = [
     path('accounts/', accounts_view, name='accounts_list'),
 
     path('create_transaction/', create_transaction, name="create_transaction"),
+    path('view_incoming_transactions/', view_incoming_transactions, name="view_incoming_transactions"),
     path('transaction_history/', transaction_history, name="transaction_history"),
 
     path('credits/', credit_configuration_list, name='credits_list'),
