@@ -29,7 +29,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('login/', login_view, name="login"),
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
-    path('/logout', logout_view, name="logout"),
+    path('logout/', logout_view, name="logout"),
     path('accounts/<str:currency>', account_view, name='account_list'),
     path('accounts/', accounts_view, name='accounts_list'),
 
