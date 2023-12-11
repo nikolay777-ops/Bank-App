@@ -8,6 +8,7 @@ from transaction_system.domain.entities import TransactionEntity
 from transaction_system.domain.interfaces import ITransactionProcessor
 from transaction_system.infrastructure.daos.transaction_dao import TransactionDAO
 from transaction_system.models import Transaction
+from django.db.models.functions import datetime
 
 
 class TransactionProcessor(ITransactionProcessor):
@@ -22,7 +23,8 @@ class TransactionProcessor(ITransactionProcessor):
             corespondent_id=entity.corespondent_pk,
             recipient_id=entity.recipient_pk,
             amount=entity.amount,
-            commission=Decimal(entity.amount * 0.015)
+            commission=entity.amount * Decimal(0.015),
+            timestamp=datetime.Now(),
         )
 
         return obj if obj else None

@@ -95,11 +95,20 @@ def login_view(request):
             phone_number = form.cleaned_data['phone_number']
             password1 = form.cleaned_data['password1']
 
-            user = authenticate(
-                request,
-                phone_number=phone_number,
-                password=password1
-            )
+            try:
+                user = authenticate(
+                    request,
+                    phone_number=phone_number,
+                    password=password1
+                )
+            except:
+                try:
+                    check_user = User.objects.get(phone_number=phone_number)
+                except User.DoesNotExist:
+                    errors = {'phone_number': 'User with such a phone number does not exist.'}
+                    return render(request, 'account_system/login.html', {'errors': errors})
+                errors = {'password1': 'Wrong password.'}
+                return render(request, 'account_system/login.html', {'errors': errors})
             if not isinstance(user, dict):
                 cache.set(f"2fa_secret_key_{user.name}", user.secret_code, 300)
                 cache.set(f'phone_num', user.phone_number, 300)

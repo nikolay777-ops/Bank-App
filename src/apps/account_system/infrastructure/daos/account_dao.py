@@ -32,17 +32,15 @@ class AccountDAO(IAccountDAO):
 
         return account_entity_list
 
-    def fetch_by_user_pk_currency_pk(
+    def fetch_by_owner_pk_currency_pk(
             self,
             owner_pk: int,
             currency_pk: str
     ) -> AccountEntity:
-
         try:
             obj = Account.objects.get(owner_id=owner_pk, currency_id=currency_pk)
             entity = self._orm_to_entity(orm_obj=obj)
-
             return entity
-
         except ObjectDoesNotExist:
-            print(f'Requested owner: {owner_pk} has not {currency_pk} account')
+            print(f'Requested owner: {owner_pk} does not have an account with currency: {currency_pk}')
+            return None
