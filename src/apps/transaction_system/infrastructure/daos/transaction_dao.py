@@ -2,10 +2,11 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from transaction_system.domain.entities import TransactionEntity
 from transaction_system.domain.interfaces import ITransactionDAO
+from transaction_system.domain.interfaces import ITransactionDAO
 from transaction_system.models import Transaction
 
 
-class TransactionDAO(Transaction):
+class TransactionDAO(ITransactionDAO):
     def _orm_to_entity(self, orm_object: Transaction) -> TransactionEntity:
         entity = TransactionEntity(
             pk=orm_object.pk,
