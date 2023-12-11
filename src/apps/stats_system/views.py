@@ -51,7 +51,7 @@ def statistics_view(request):
                 else:
                     index = int(income_last_month.count() / 2)
                 my_list = list(income_last_month.values_list('amount', flat=True))
-                if my_list is not None and index is not None:
+                if my_list is not None and index is not None and my_list==[]:
                     # Вычисляем медианный доход за последний месяц
                     median_income_last_month = round(my_list[index], 2)
                 else:
