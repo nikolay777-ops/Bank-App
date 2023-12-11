@@ -39,6 +39,7 @@ def register(request):
                 'form': form,
                 'errors': form.errors
             }
+            return render(request, 'account_system/registration.html', context)
     else:
         context = {
             'form': RegistrationForm()
@@ -119,7 +120,12 @@ def login_view(request):
 
             else:
                 return render(request, 'account_system/login.html', user)
-
+        else:
+            context = {
+                'form': form,
+                'errors': form.errors
+            }
+            return render(request, 'account_system/login.html', context)
     return render(request, 'account_system/login.html', {'form': LoginForm()})
 
 
@@ -159,9 +165,7 @@ def two_factor_auth(request):
 
         else:
             errors = {
-                'verification_code': [
-                    'Invalid verification code',
-                ]
+                'verification_code': 'Invalid verification code',
             }
             return render(
                 request,

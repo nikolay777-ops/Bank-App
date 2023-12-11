@@ -41,8 +41,6 @@ urlpatterns = [
     path('login/', login_view, name="login"),
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
     path('logout/', logout_view, name="logout"),
-    path('accounts/<str:currency>', account_view, name='account_list'),
-    path('accounts/', accounts_view, name='accounts_list'),
 
     path('create_account', create_account, name='create_account'),
     path('my_accounts_list/', my_accounts_list, name='my_accounts_list'),

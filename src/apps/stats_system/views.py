@@ -40,12 +40,22 @@ def statistics_view(request):
 
             # Вычисляем средний доход за последний месяц
             if income_last_month is not None:
-                average_income_last_month = round(
-                    income_last_month.aggregate(Sum('amount'))['amount__sum'] / income_last_month.count(), 2)
-                index = int(income_last_month.count() / 2)
+                a_income_last_month = income_last_month.aggregate(Sum('amount'))['amount__sum']
+                if a_income_last_month is not None:
+                    average_income_last_month = round(
+                        income_last_month.aggregate(Sum('amount'))['amount__sum'] / income_last_month.count(), 2)
+                else:
+                    average_income_last_month = 0.00
+                if income_last_month.count() == 1:
+                    index = 0
+                else:
+                    index = int(income_last_month.count() / 2)
                 my_list = list(income_last_month.values_list('amount', flat=True))
-                # Вычисляем медианный доход за последний месяц
-                median_income_last_month = round(my_list[index], 2)
+                if my_list is not None and index is not None:
+                    # Вычисляем медианный доход за последний месяц
+                    median_income_last_month = round(my_list[index], 2)
+                else:
+                    median_income_last_month = 0.00
             else:
                 average_income_last_month = 0.00
                 median_income_last_month = 0.00
@@ -57,7 +67,8 @@ def statistics_view(request):
                 Q(success=True) &
                 Q(currency=currency)
             )
-            if income_last_year is not None:
+            if income_last_year is not None \
+                    and income_last_year.aggregate(Sum('amount'))['amount__sum'] is not None:
                 average_income_last_year = round(income_last_year.aggregate(Sum('amount'))['amount__sum'] / income_last_year.count(), 2)
             else:
                 average_income_last_year = 0.00
