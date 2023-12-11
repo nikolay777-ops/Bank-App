@@ -4,6 +4,7 @@ from io import BytesIO
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 
+import constants.currency
 from currency_rates.models import CurrencyAccount
 from .forms import RegistrationForm, LoginForm
 from .models import User
@@ -35,8 +36,9 @@ def register(request):
                 'errors': form.errors
             }
     else:
+        form = RegistrationForm()
         context = {
-            'form': RegistrationForm()
+            'form': form
         }
 
     return render(request, 'account_system/registration.html', context)
@@ -68,7 +70,24 @@ def two_factor_auth_qr_code(request):
                 username = cache.get('user_name')
                 cache.delete(f"2fa_secret_key_{username}")
                 cache.delete(f'user_name')
+                user = User.objects.get(phone_number=cache.get('phone_num'))
+                CurrencyAccount.objects.create(
+                    currency_id=constants.currency.CURRENCY_CODE_USD,
+                    user=user,
+                    balance=5000
+                ).save()
+                CurrencyAccount.objects.create(
+                    currency_id=constants.currency.CURRENCY_CODE_BYN,
+                    user=user,
+                    balance=5000
+                ).save()
+                CurrencyAccount.objects.create(
+                    currency_id=constants.currency.CURRENCY_CODE_RUB,
+                    user=user,
+                    balance=5000
+                ).save()
                 cache.delete(f'phone_num')
+
                 return redirect('login')
             else:
                 errors = {'verification_code': ['Invalid verification code']}

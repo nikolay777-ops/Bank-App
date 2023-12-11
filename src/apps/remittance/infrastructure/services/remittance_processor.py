@@ -22,7 +22,7 @@ class RemittanceProcessor(IRemittanceProcessor):
             sender_id=entity.sender_pk,
             receiver_id=entity.receiver_pk,
             count=entity.count,
-            commission=Decimal(entity.count * 0.015)
+            commission=Decimal(entity.count) * Decimal(0.015)
         )
 
         return obj if obj else None
@@ -53,10 +53,10 @@ class RemittanceProcessor(IRemittanceProcessor):
                 currency_pk=remittance_entity.currency_pk
             )
 
-            sender_currency_account_entity.balance -= remittance_entity.count
+            sender_currency_account_entity.balance -= Decimal(remittance_entity.count)
 
             if sender_currency_account_entity.balance >= 0 and receiver_currency_account_entity:
-                receiver_currency_account_entity.balance += remittance_entity.count
+                receiver_currency_account_entity.balance += Decimal(remittance_entity.count)
 
                 self.currency_account_processor.update_currency_account(
                     entity=sender_currency_account_entity

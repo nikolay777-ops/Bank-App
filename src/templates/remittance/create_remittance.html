@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'core/base.html' %}
 
-</body>
-</html>
+{% block content %}
+<div class="container text-white">
+    <div class="p-2 m-2">
+        <div class="col-md-6 mx-auto pt-4 bg-dark">
+            <h3 class="text-white text-center pb-2">Create a transaction</h3>
+            {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+            <form action="" method="post" class="bg-dark d-flex flex-column align-items-center">
+                {% csrf_token %}
+
+                <div class="form-group w-100">
+                    <label for="currency">Currency:</label>
+                    <select name="currency" id="currency" class="form-control">
+                        {% for currency in currencies %}
+                            <option value="{{ currency }}">{{ currency }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group w-100">
+                    <label for="phone_number">Recipient phone number:</label>
+                    <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="+375291335588">
+                </div>
+
+                <div class="form-group w-100">
+                    <label for="amount">Transfer amount:</label>
+                    <input type="text" name="amount" id="amount" class="form-control" placeholder="100.00">
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-primary mt-1 mr-2 mb-3">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

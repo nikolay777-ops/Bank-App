@@ -17,10 +17,10 @@ DEBUG = True
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ov695n#ol+qtp^2_&zfi9o93w(#6ej*o2b!r4!j2d-u+j%92rl'
 # SECURITY WARNING: don't run with debug turned on in production!
-FIELD_ENCRYPTION_KEY = 'eP1DLk6t3mL2ZAmtAaInP5Mrbfza3dDXLNiwAhKbfxo'
+FIELD_ENCRYPTION_KEY = 'eP1DLk6t3mL2ZAmtAaInP5Mrbfza3dDXLNiwAhKbfxo='
 
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1,0.0.0.0',]
+ALLOWED_HOSTS = ['*']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
+from remittance.views import create_transaction, view_incoming_transactions, transaction_history
 from stocks.views import list_stock, investment_portfolio_view, sell_all_stocks_view
 from user.views import register, home, two_factor_auth_qr_code, login_view, two_factor_auth, accounts_view, \
     account_view, logout_view
@@ -14,9 +15,6 @@ urlpatterns = [
     path('', home, name='home'),
     path('login/', login_view, name="login"),
     path('two_factor_auth/', two_factor_auth, name="two_factor_auth"),
-
-    path('create_transaction/', login_view, name="create_transaction"),
-
     path('credits/', credit_configuration_list, name='credits_list'),
     path('my_credits/', user_credit_list, name="user_credit_list"),
     path('take_credit/', login_view, name="take_credit"),
@@ -28,4 +26,8 @@ urlpatterns = [
     path('stocks/', list_stock, name='stock_list'),
     path('investment-portfolio/', investment_portfolio_view, name='investment_portfolio_view'),
     path('sell-all/', sell_all_stocks_view, name='sell_all_stocks'),
+    # path('create_transaction/', create_transaction, name="create_transaction"),
+    path('create_transaction/', create_transaction, name="create_transaction"),
+    path('view_incoming_transactions/', view_incoming_transactions, name="view_incoming_transactions"),
+    path('transaction_history/', transaction_history, name="transaction_history"),
 ]
