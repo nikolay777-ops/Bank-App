@@ -3,8 +3,6 @@ import sys
 
 from .apps import *
 from .databases import *
-from .environment import *
-from .celery import *
 from .logging import *
 
 BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
